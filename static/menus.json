@@ -1,0 +1,84 @@
+{
+    "menuInfo": [
+        {
+            "leafFlag": 0,
+            "menuCname": "接口监控",
+            "menuCode": "001006041",
+            "menuEname": "api log",
+            "menuLevel": 3,
+            "menuLink": "001006041",
+            "parentMenuCode": "001006",
+            "children": [
+                {
+                    "children": [
+
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "接口监控列表",
+                    "menuCode": "001006041041",
+                    "menuEname": "invoke api log",
+                    "menuLevel": 4,
+                    "menuLink": "invoke_api_log",
+                    "opts": [
+
+                    ],
+                    "parentMenuCode": "001006041"
+                },
+                {
+                    "children": [
+
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "创建订单列表",
+                    "menuCode": "001006041041",
+                    "menuEname": "created order",
+                    "menuLevel": 4,
+                    "menuLink": "created_order",
+                    "opts": [
+
+                    ],
+                    "parentMenuCode": "001006041"
+                }, {
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "参数管理",
+                    "menuCode": "001006041041",
+                    "menuEname": "system_manage",
+                    "menuLevel": 4,
+                    "menuLink": "param_setting",
+                    "opts": [
+
+                    ],
+                    "parentMenuCode": "001006041"
+                }
+            ]
+        },{
+            "leafFlag": 0,
+            "menuCname": "系统设置",
+            "menuCode": "001006042",
+            "menuEname": "sys",
+            "menuLevel": 3,
+            "menuLink": "001006042",
+            "parentMenuCode": "001006",
+            "children": [
+                {
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "参数管理",
+                    "menuCode": "001006042001",
+                    "menuEname": "system_manage",
+                    "menuLevel": 4,
+                    "menuLink": "param_setting",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006042"
+                }
+            ]
+        }
+    ],
+    "code": 200,
+    "msg": "success"
+}
+
