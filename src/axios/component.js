@@ -80,5 +80,19 @@ export default {
                 }
             }
         }
+    },
+    remoteMethod(input, self) {
+        console.debug("input: " + input);
+        if (self.remotable === false) {
+            return;
+        }
+        if (isEmpty(input)) {
+            return;
+        }
+        if (self.filterSize === 0 || input.length >= self.filterSize) {
+            console.debug("input.length >= " + self.filterSize);
+            self.isLoading = true;
+            self.fetchOptions(input);
+        }
     }
 }

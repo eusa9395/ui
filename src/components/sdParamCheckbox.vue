@@ -21,7 +21,7 @@
             keyName: {
                 type: String,
                 required: false,
-                default: 'code'
+                default: 'paramDetailCode'
             },
             // labelName: {
             //     type: String,
@@ -53,6 +53,10 @@
                 currentValue: [],
                 isIndeterminate: false,
             }
+        },
+        model: {
+            prop: 'value',
+            event: 'change'
         },
         methods: {
             fetchOptions(input) {
