@@ -53,16 +53,16 @@
 
         <!--添加或者编辑-->
         <section>
-            <el-dialog custom-class="col1-dialog" :title="formObj.title" :visible.sync="formObj.formVisible" :close-on-click-modal="true">
-                <el-form :model="formObj.formModel" label-width='160px' ref="locationTypeAddForm" :rules="companyRules">
-                    <el-input v-model="formObj.formModel.id" :disabled="true" placeholder="请输入公司名称"></el-input>
+            <el-dialog custom-class="col1-dialog" :title="formObj.title"  :visible.sync="formObj.formVisible" :close-on-click-modal="true">
+                <el-form :model="formObj.formModel" label-width='80px' ref="companyAdd" :rules="companyRules">
+                    <el-input v-model="formObj.formModel.id" v-show="false" placeholder="请输入公司名称"></el-input>
                     <el-form-item label="公司名称" prop="companyName">
                         <el-input v-model="formObj.formModel.companyName" placeholder="请输入公司名称"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="handleAdd('locationTypeAddForm')">取消</el-button>
-                    <el-button type="primary" @click="handleAdd">添加</el-button>
+                    <el-button @click="handleClose('companyAdd')">取消</el-button>
+                    <el-button type="primary" @click="handleSubmit">添加</el-button>
                 </div>
             </el-dialog>
         </section>
@@ -163,26 +163,11 @@
             //打开新增界面
             handleAdd() {
                 this.formObj = {
-                    isBarCodeDisabled: false,
-                    title: "",
+                    title: "添加操作",
                     formVisible: true,
                     formModel: {
                         id:'',
-                        currency:'',
-                        warehouse:'',
-                        customerCode:'',
-                        barcode:'',
-                        type:'',
-                        status:'',
-                        quantity:'',
-                        cost:'',
-                        expenses:'',
-                        nameEn:'',
-                        name:'',
-                        length:'',
-                        width:'',
-                        height:'',
-                        weight:'',
+                        companyName:''
                     }
                 }
             },
