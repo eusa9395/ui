@@ -68,9 +68,21 @@
                     "leafFlag": 1,
                     "menuCname": "参数管理",
                     "menuCode": "001006042001",
-                    "menuEname": "system_manage",
+                    "menuEname": "paramSetting",
                     "menuLevel": 4,
-                    "menuLink": "param_setting",
+                    "menuLink": "paramSetting",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006042"
+                },{
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "公司管理",
+                    "menuCode": "001006042002",
+                    "menuEname": "companyManage",
+                    "menuLevel": 4,
+                    "menuLink": "companyManage",
                     "opts": [
                     ],
                     "parentMenuCode": "001006042"

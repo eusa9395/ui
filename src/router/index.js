@@ -4,7 +4,8 @@ import Layout from '../layout/Layout.vue';
 import invoke_api_log from "../page/invoke_api_log.vue";
 import created_order from "../page/created_order.vue";
 /*系统设置页面*/
-import paramSetting from "../page/sysManagement/param_setting.vue";
+import paramSetting from "../page/sysManagement/paramSetting.vue";
+import companyManage from "../page/sysManagement/companyManage.vue";
 
 
 
@@ -37,13 +38,17 @@ export default new VueRouter({
             ]
         },{
             name: '参数设置',
-            path: '/param_setting',
+            path: '/paramSetting',
             component: Layout,
             children:[
                {
                     name: '参数管理',
-                    path: '/param_setting',
+                    path: '/paramSetting',
                     component: paramSetting
+                },{
+                    name: '公司管理',
+                    path: '/companyManage',
+                    component: companyManage
                 }
             ]
         }
