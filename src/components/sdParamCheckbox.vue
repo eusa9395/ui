@@ -12,7 +12,10 @@
     export default {
         name: 'sdParamCheckbox',
         props: {
-
+            value: {
+                required: false,
+                default: ''
+            },
             typeCode: {
                 type: String,
                 required: true,
