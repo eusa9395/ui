@@ -51,6 +51,50 @@ export function china2Local(value, format) {
 }
 
 
+//参数表code换name 传总单code过来
+export function paramCode2ParamCname(value, paramCode) {
+     console.log("paramCode2ParamCname")
+     console.log(value)
+     console.log(paramCode)
+    if (isEmpty(value)) {
+        return null;
+    }
+    let url = "v1.0.0/paramsDetail/queryDetails?code=" + paramCode;
+    let listJson = window.sessionStorage.getItem(url);
+    let list = listJson ? JSON.parse(listJson) : null;
+     console.log(list)
+
+    if(list == null) {
+        try {
+            let resultList = http.sync_get(url);
+            if(resultList && resultList.indexOf('[')===0 && resultList.length > 0) {
+                window.sessionStorage.setItem(url, resultList);
+            }
+            // 第一次进来也要执行转化
+            list = JSON.parse(resultList);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    //匹配
+    let isMatch = false;
+    if(list != null && list.constructor === Array) {
+        for (let i = 0; i < list.length; i++) {
+            // window.sessionStorage.setItem(value, list[i]['cname']);
+            if (value == list[i]['code']) {
+                isMatch = true;
+                return list[i]['paramDetailName'];
+            }
+        }
+        if(!isMatch){
+            return value
+        }
+    }
+    return null;
+}
+
+
 
 
 

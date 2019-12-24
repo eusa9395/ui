@@ -4,12 +4,12 @@
         <el-row>
             <el-col :span="24" class="toolbar">
                 <el-form :inline="true" :model="filters" label-width="120px">
-                    <el-form-item label="参数示例">
+                    <!--<el-form-item label="参数示例">
                         <sd-param-checkbox v-model="filters.paramCode" type-code="HT" ></sd-param-checkbox>
                     </el-form-item>
                     <el-form-item label="参数示例">
                         <sd-param-select v-model="filters.paramCode" type-code="HT" ></sd-param-select>
-                    </el-form-item>
+                    </el-form-item>-->
                     <el-form-item label="总参编号">
                         <el-input v-model="filters.paramCode" placeholder="请输入总参编号"></el-input>
                     </el-form-item>
@@ -28,12 +28,12 @@
         <el-row>
             <el-col :span="12" style="padding-right: 10px;">
                 <el-table :data="pagination.content" highlight-current-row v-loading="isLoading" border stripe :height="heightNum" @cell-click="cellMouseEnter">
-                    <el-table-column type="index" label="NO" width="40" align="center"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="paramName" label="总参名" min-width="150" align="center"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="paramCode" label="总参编号" min-width="160" align="center"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="paramNote" label="备注" min-width="160" align="center"></el-table-column>
+                    <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="paramName" label="总参名" min-width="100" align="center"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="paramCode" label="总参编号" min-width="150" align="center"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="paramNote" label="备注" min-width="150" align="center"></el-table-column>
                     <!--<el-table-column show-overflow-tooltip prop="paramType" :label="$t('pages.paramSetting.table.paramType')" min-width="120" align="center"></el-table-column>-->
-                    <el-table-column label="操作" width="200" align="center">
+                    <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                             <el-button type="danger" size="mini" icon="el-icon-delete" plain @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -51,15 +51,14 @@
                 <!--分页结束-->
             </el-col>
             <el-col :span="12" style="padding-left: 10px;">
-                <el-table :data="subPagination.content" highlight-current-row v-loading="isLoading" border stripe :height="heightNum">
-                    <el-table-column type="index" label="NO" width="40" align="center"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="paramDetailId" label="id" min-width="160" align="center"></el-table-column>
-                    <el-table-column show-overflow-tooltip prop="paramDetailName" label="子参名" min-width="160" align="center"></el-table-column>
+                <el-table :data="cnmbcontent" highlight-current-row v-loading="isLoading" border stripe :height="heightNum">
+                    <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="paramDetailName" label="子参名" min-width="150" align="center"></el-table-column>
                     <el-table-column show-overflow-tooltip prop="paramDetailCode" label="子参编号" min-width="150" align="center"></el-table-column>
                     <el-table-column show-overflow-tooltip prop="paramDetailNote" label="备注" min-width="150" align="center"></el-table-column>
                     <!--<el-table-column show-overflow-tooltip prop="paramDetailEname" label="子参英文名" min-width="150" align="center"></el-table-column>-->
                     <el-table-column prop="startCode" label="排序" width="80" align="center"></el-table-column>
-                    <el-table-column label="操作" width="200" align="center">
+                    <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleSubEdit(scope.$index, scope.row)">编辑</el-button>
                             <el-button type="danger" size="mini" icon="el-icon-delete" plain @click="handleSubDelete(scope.$index, scope.row)">删除</el-button>
@@ -103,14 +102,11 @@
                     <el-form-item prop="paramDetailCode" label="子参编号" >
                         <el-input v-model="formSubObj.formModel.paramDetailCode" auto-complete="off" @blur="checkCode(formSubObj.formModel.paramDetailCode, false)"></el-input>
                     </el-form-item>
-                    <el-form-item prop="paramDetailCname" label="子参名" >
-                        <el-input v-model="formSubObj.formModel.paramDetailCname" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="paramDetailEname" label="子参英文名" >
-                        <el-input v-model="formSubObj.formModel.paramDetailEname" auto-complete="off"></el-input>
+                    <el-form-item prop="paramDetailName" label="子参名" >
+                        <el-input v-model="formSubObj.formModel.paramDetailName" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item prop="sortNum" label="排序" >
-                        <el-input v-model="formSubObj.formModel.sortNum" auto-complete="off"></el-input>
+                        <el-input v-model="formSubObj.formModel.startCode" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item prop="paramDetailNote" label="子参说明" >
                         <el-input v-model="formSubObj.formModel.paramDetailNote" auto-complete="off"></el-input>
@@ -149,6 +145,7 @@
                     page: 1,
                     content: []
                 },
+                cnmbcontent:[],
                 subSize: 20,
                 isLoading: false,
                 isSubLoading: false,
@@ -191,11 +188,8 @@
                     paramDetailCode: [
                         { required: true, message: '请输入子参编号', trigger: 'blur' }
                     ],
-                    paramDetailCname: [
+                    paramDetailName: [
                         { required: true, message: '请输入子参中文名', trigger: 'blur' }
-                    ],
-                    paramDetailEname: [
-                        { required: true, message: '请输入子参英文名', trigger: 'blur' }
                     ]
                 }
             }
@@ -262,7 +256,7 @@
                 http.get("v1.0.0/paramsDetail/getParamDetailsByCode", {params : params}).then(response => {
                     if(response.code==200){
                         this.isSubLoading = false;
-                        this.subPagination.content = response.data;
+                        this.cnmbcontent = response.data;
                     }
                 });
             },
@@ -294,7 +288,8 @@
                     isParent: isParent
                 };
                 if (isParent) {
-                    params.paramsCode = code;
+                    params.parentCode = code;
+                    params.sonCode = '';
                 } else {
                     params.parentCode = this.parentCode;
                     params.sonCode = code;
@@ -417,7 +412,7 @@
                 this.$confirm('确认删除？', '提示', {
                     type: 'warning'
                 }).then(() => {
-                    http.delete("v1.0.0/paramsDetail/deleteParamsDetailModel/" + row.paramDetailId).then(response => {
+                    http.delete("v1.0.0/paramsDetail/deleteParamDetail/" + row.paramDetailId).then(response => {
                         if(response == true){
                             this.isSubLoading = false;
                             this.loadSubPagination();
@@ -433,10 +428,10 @@
                         if(valid && res) {
                             self.isSubLoading = true;
                             let method = "post"
-                            let postUrl = "v1.0.0/params/addParams";
+                            let postUrl = "v1.0.0/paramsDetail/addParamDetail";
                             if(self.formSubObj.formModel.paramDetailId) {
                                 method = "put"
-                                postUrl = "v1.0.0/params/modifyParams";
+                                postUrl = "v1.0.0/paramsDetail/modifyParamDetail";
                             }
                             http.postOrPut(postUrl, method, self.formSubObj.formModel).then(response => {
                                 if(response == true){
