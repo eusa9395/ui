@@ -1,5 +1,11 @@
 import Vue from 'vue';
 import store from '../store';
+import sdParamCheckbox from '../components/sdParamCheckbox.vue';
+
+
+
+//引用自定义组件
+Vue.component('sdParamCheckbox', sdParamCheckbox);
 
 export default Vue.directive('hasPermission', {
   update: function (el, binding) {

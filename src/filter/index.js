@@ -4,7 +4,7 @@ import moment from "moment";
 export function nullValFilter(value) {
     return (value === null || value === undefined) ? 'null' : value;
 }
-
+// 为空
 export function isEmpty(value) {
     if (value === null || value === undefined) {
         return true;
@@ -13,12 +13,47 @@ export function isEmpty(value) {
         return true;
     }
     return value instanceof String && value.trim().length === 0;
-
 }
-
+// 非空
 export function isNotEmpty(value) {
     return !isEmpty(value);
 }
+// 空对象
+export function isObjectEmpty(obj) {
+    if(obj === null || obj === undefined) {
+        return true;
+    }
+    if (obj.constructor !== Object) {
+        return obj.length === 0;
+    }
+    return Object.keys(obj).length === 0;
+}
+// 是否为数字
+export function isRealNum(val){
+    // isNaN()函数 把空串 空格 以及NUll 按照0来处理 所以先去除
+    if(val === "" || val ==null){
+        return false;
+    }
+    if(!isNaN(val)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+// 时区转换 中国转当地
+export function china2Local(value, format) {
+    if (value) {
+        value = value.replace(/-/g,'/');
+        return moment(value + " +0800").format(format ? format : "YYYY-MM-DD HH:mm:ss");
+    }
+    return '';
+}
+
+
+
+
+
 
 // 日期格式化
 export function date(value) {

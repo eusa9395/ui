@@ -4,6 +4,9 @@
         <el-row>
             <el-col :span="24" class="toolbar">
                 <el-form :inline="true" :model="filters" label-width="120px">
+                    <el-form-item label="参数示例">
+                        <sd-param-checkbox v-model="filters.paramCode" type-code="HT" ></sd-param-checkbox>
+                    </el-form-item>
                     <el-form-item label="总参编号">
                         <el-input v-model="filters.paramCode" placeholder="请输入总参编号"></el-input>
                     </el-form-item>
