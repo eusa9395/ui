@@ -1,5 +1,131 @@
  //覆盖一些element-ui样式
 
+
+ //一般弹窗，设置弹出框最小宽度
+ .normal-dialog { width: 50%; min-width: 900px;}
+ //比较小的弹窗 1列form弹出框
+ .col1-dialog { width: 450px;}
+ //比较小的弹窗 宽度600 / 800
+ .w600-dialog { width: 600px;}
+ //比较小的弹窗 2列form弹出框
+ .col2-dialog { width: 800px;}
+ //比较宽的弹出框，适用于要展示内容较多的弹窗
+ .wide-dialog { width: 55%; min-width: 1050px;}
+ //更宽一点的弹出框，适用于搜索+表格+分页 内容较多的弹窗
+ .wider-dialog { width: 65%; min-width: 1150px;}
+ //近似全屏的弹窗
+ .full-screen-dialog { width: 85%; min-width: 1300px;}
+
+ // 上传弹出框(较简单，可通用，仅包含上传组件和提示信息)
+ .upload-file-dialog { width: 500px; height: 350px;}
+ .upload-file-dialog .upload-file-tips { margin-top: 30px; border-top: 1px solid #B5BDB9; padding-top: 5px;}
+ .upload-file-dialog .upload-file-tips span { font-weight: bold;}
+
+
+ //dialog 的 margin-top margin-bottom 高度
+ .dialog-mt2vh { margin-top: 2vh !important;}
+ .dialog-mb2vh { margin-bottom: 2vh !important;}
+ .dialog-mt5vh { margin-top: 5vh !important;}
+ .dialog-mt10vh { margin-top: 10vh !important;}
+
+
+ //dialog下的 table
+ .normal-dialog .productListTable,
+ .wide-dialog .productListTable,
+ .wider-dialog .productListTable,
+ .full-screen-dialog .productListTable {
+     width: 100%;
+     table-layout:fixed;
+     border-collapse: separate;
+     border-spacing: 0 1px;
+     border: 1px #d9d9d9 solid;
+     //border-radius: 8px;
+     //background-color: #f1f1f1;
+     margin-bottom: 10px;
+     -webkit-box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
+     box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
+ }
+
+ .el-row { margin-bottom: 2px;}
+ .el-col { border-radius: 2px;}
+
+
+ /* Table */
+ .el-table { font-size: 12px !important;}
+ //.el-table--fit { border-bottom: 1px rgb(223, 230, 236) solid; border-right: 1px rgb(223, 230, 236) solid;}
+ .el-table .cell { text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+ .el-table th { background-color: #eef1f6; color: #1f2d3d;} //table表头
+ .el-table td, .el-table th { padding: 5px 0;} //table单元格 内padding
+ .el-table td, .el-table th.is-leaf { border-right: 1px solid #dfe6ec; border-bottom: 1px solid #dfe6ec;} //加深table边框颜色
+ //.el-table td, .el-table .text-box { width: 100%; white-space: normal; word-break: break-all; word-wrap: break-word; } //(影响Safari显示所以注释)table 中可以换行的div, 需要自行设置 height
+ //表格留白gutter
+ .el-table--fit td.gutter, .el-table--fit th.gutter { background: #fff; border: 0;}
+
+
+ /* Time */
+ //time picker 垂直居中
+ .el-time-panel__content::after, .el-time-panel__content::before { margin-top: -7px;}
+
+
+ /* Form */
+ .el-form-item { margin-bottom: 12px !important;}
+ // size为small时，设置表单item高度
+ .el-form-item--small .el-form-item__label { height: 35px; line-height: 35px;}
+ .el-form-item--small .el-form-item__content { height: 33px;}
+ //特别长的label,2行显示
+ .too_long_label .el-form-item__label {line-height: 1;}
+ //不限制form-item内容的高度
+ .full-height .el-form-item__content { height: 100%;}
+ // form-item包含textarea时
+ .form-item-textarea .el-form-item__content { height: 100%;}
+ // 搜索条中 form item
+ .toolbar .el-form-item { margin-bottom: 2px !important;}
+ // table中 form item
+ td .el-form-item { margin-bottom: 6px !important;}
+ // 错误提示
+ .el-form-item__error { padding-top: 0 !important;}
+
+ // receiptList页面 弹窗箱号选择部分 固定高度且可滚动
+ .scroll-content .el-form-item__content { width: 600px; height: 100%; max-height: 130px; overflow: auto;}
+ // shelves页面 弹窗指定拣货员部分 固定高度且可滚动
+ .picker-content { margin-top: 5px;}
+ .picker-content .el-form-item__content { width: 630px; height: 100%; max-height: 215px; margin-bottom: 10px; overflow: auto;}
+
+
+ //el-table中的form输入框，显示校验信息时自动变高
+ .el-table-form .el-form-item { margin-bottom: 0 !important;}
+ .el-table-form .el-form-item .el-form-item__content { height: 100%;}
+ .el-table-form .el-form-item .el-form-item__error { position: inherit} //校验文字 撑大 框的高度
+
+ /* Upload */
+ .g-core-image-corp-container .info-aside { height:45px;}
+
+
+ /* Tabs */
+ .el-tabs__header { margin-bottom: 5px;}
+ .el-tabs__item.is-active { background-color: #66b1ff;color: #fff;}
+ .el-tabs--border-card>.el-tabs__content { padding: 2px;}
+ //tab页签中包含统计数字
+ .num-tips-tab .el-tabs__item > span > span { color: red; font-size:18px;}
+
+
+ /* card */
+ .el-card__header { padding: 0;}
+
+
+ /* popover */
+ .popover-style { border: 2px #66b1ff dashed; background: #eef1f6; box-shadow: 4px 4px 10px 2px rgba(0,0,0,.3);}
+
+
+ /* confirm  */
+ .el-message-box__message p { word-wrap: break-word; word-break: break-all; overflow: hidden;}
+
+ /* 状态切换栏 */
+ .status-tabs .el-tabs__item { height: 30px; line-height: 30px;} //设置高度
+ .status-tabs .el-tabs__nav-prev, .status-tabs .el-tabs__nav-next { line-height: 30px;}
+ .status-tabs .el-tabs__header { margin-bottom: 2px;}
+
+
  .block-checkbox {
   display: block;
 }
@@ -16,6 +142,7 @@
  .el-pagination .el-select .el-input input {
      width: 110px;
  }
+
  // 日期选择部分输入框保持原有宽度
  .el-date-editor, .el-picker-panel {
      display: inline-block;

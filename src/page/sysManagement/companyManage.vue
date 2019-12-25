@@ -34,7 +34,7 @@
             <el-table-column label="" width="200" fixed="right">
                 <template slot-scope="scope">
                     <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleExit(scope.row)">编辑</el-button>
-                    <el-button type="danger" size="mini" icon="el-icon-delete" plain @click="handleExit(scope.row)">删除</el-button>
+                    <el-button type="danger" size="mini" icon="el-icon-delete" plain @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -53,16 +53,16 @@
 
         <!--添加或者编辑-->
         <section>
-            <el-dialog custom-class="col1-dialog" :title="formObj.title"  :visible.sync="formObj.formVisible" :close-on-click-modal="true">
+            <el-dialog custom-class="col1-dialog" :title="formObj.title" width="30%"  :visible.sync="formObj.formVisible" :close-on-click-modal="true">
                 <el-form :model="formObj.formModel" label-width='80px' ref="companyAdd" :rules="companyRules">
-                    <el-input v-model="formObj.formModel.id" v-show="false" placeholder="请输入公司名称"></el-input>
+                    <el-input v-model="formObj.formModel.id" v-show="false"></el-input>
                     <el-form-item label="公司名称" prop="companyName">
-                        <el-input v-model="formObj.formModel.companyName" placeholder="请输入公司名称"></el-input>
+                        <el-input v-model="formObj.formModel.companyName" @blur="checkName(formObj.formModel.companyName, true)" placeholder="请输入公司名称"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="handleClose('companyAdd')">取消</el-button>
-                    <el-button type="primary" @click="handleSubmit">添加</el-button>
+                    <el-button type="primary" @click="handleSubmit('companyAdd')">确认</el-button>
                 </div>
             </el-dialog>
         </section>
@@ -100,26 +100,9 @@
                 },
 
                 companyRules:{
-                    barcode: [
-                        { required: true, message: "this.$t('pages.packageMaterial.barcodePH')", trigger: 'blur' },
+                    companyName: [
+                        { required: true, message: "公司名称不能为空", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
-                    ],
-                    warehouse: [
-                        { required: true, message: "this.$t('pages.packageMaterial.warehousePH')", trigger: 'change' },
-                    ],
-                    type: [
-                        { required: true, message: "this.$t('pages.packageMaterial.dialog.typeVALID')", trigger: 'change' }
-                    ],
-                    status: [
-                        { required: true, message: "this.$t('pages.packageMaterial.dialog.stautsPH')", trigger: 'change' }
-                    ],
-                    quantity: [
-                        { required: true, message: "this.$t('pages.packageMaterial.dialog.quantityPH')", trigger: 'blur' },
-                        { pattern: /^(0|[1-9][0-9]*)+(.[0-9]{1,3})?$/, message: "", trigger: 'blur'},
-                    ],
-                    cost: [
-                        { required: true, message: "this.$t('pages.packageMaterial.dialog.costPH')", trigger: 'blur' },
-                        { pattern: /^(0|[1-9][0-9]*)+(.[0-9]{1,3})?$/, message: "", trigger: 'blur'},
                     ]
                 }
             }
@@ -176,7 +159,7 @@
             handleExit(row){
                 this.formObj = {
                     isBarCodeDisabled: true,
-                    title: "",
+                    title: "编辑操作",
                     formVisible: true,
                     formModel: Object.assign({}, row)
                 };
@@ -186,25 +169,27 @@
 
             //执行添加 / 修改
             handleSubmit(ref){
+                const self = this;
                 this.$refs[ref].validate((valid) => {
                     if(valid){
                         let method = "post";
-                        let url = "api/packingMaterial/";
+                        let url = "v1.0.0/company/addCompany";
                         if(this.formObj.formModel.id){
                             method = "put";
-                            url += "/" + this.formObj.formModel.id;
+                            url = "v1.0.0/company/modifyCompany";
                         }
-                        http.postOrPut(url, method, this.formObj.formModel).then(response => {
-                            if(response) {
-                                this.isLoading = false;
-                                this.formObj.formVisible=false;
-                                this.$message.success(response);
-                                this.loadPagination();
+                        http.postOrPut(url, method, self.formObj.formModel).then(response => {
+                            console.log(response);
+                            if(response.code == 200) {
+                                self.isLoading = false;
+                                self.formObj.formVisible=false;
+                                self.$message.success(response.msg);
+                                self.loadPagination();
                             }
                         }).catch(function (error) {
-                            this.isLoading = true;
+                            self.isLoading = true;
                             console.log(JSON.stringify(error));
-                            this.$message.error(error['data']);
+                            self.$message.error(error['data']);
                         });
                     }
                 })
@@ -214,6 +199,45 @@
             handleClose(ref){
                 this.$refs[ref].resetFields();
                 this.formObj.formVisible=false;
+            },
+            checkName(name,callback){
+                if (!name) {
+                    callback ? callback(false) : null
+                    return false;
+                }
+
+                let params = {
+                    companyName: name
+                };
+
+                http.get("v1.0.0/company/checkName", {params: params}).then(response => {
+                    if(response == false){
+                        this.formObj.formModel.companyName = '';
+                        this.$message.error('公司名称重复！');
+                        callback ? callback(false) : null
+                    }else{
+                        callback ? callback(true) : null
+                    }
+                });
+            },
+
+            //执行删除
+            handleDelete(row){
+                if(row.id){
+                    this.$confirm('确认删除？', '提示', {
+                        type: 'warning'
+                    }).then(() => {
+                        let params ={
+                            id:row.id
+                        }
+                        http.get("v1.0.0/company/deleteCompany", {params: params}).then(response => {
+                            if(response.code == 200){
+                                this.$message.error(response.msg);
+                                this.loadPagination();
+                            }
+                        });
+                    })
+                }
             },
 
             // 计算表格高度
