@@ -4,10 +4,12 @@
         <el-row>
             <el-col :span="24" class="toolbar">
                 <el-form :inline="true" :model="filters">
-
-                    <el-form-item label="公司名称">
-                        <el-input v-model="filters.companyName" placeholder="提示"></el-input>
+                    <el-form-item label="模糊搜索">
+                        <el-input v-model="filters.allItem" placeholder="输入部门，公司名称搜索"></el-input>
                     </el-form-item>
+                    <!--<el-form-item label="公司名称">
+                        <sd-param-select v-model="filters.companyId" type-code="" has-all="company"></sd-param-select>
+                    </el-form-item>&ndash;&gt;-->
                     <el-form-item style="margin-left: 20px;">
                         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                         <el-button type="success" icon="el-icon-plus" @click="handleAdd" :disabled="isLoading">添加</el-button>
@@ -20,7 +22,7 @@
         <!--列表开始-->
         <el-table :data="pagination.content" :height="heightNum" v-loading="isLoading" highlight-current-row border stripe>
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="companyName" label="公司名称" min-width="200"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="deptName" label="部门名称" min-width="200"></el-table-column>
             <el-table-column label="更新时间" width="200">
                 <template slot-scope="scope">
                     {{ scope.row.updateTime | china2Local}}
@@ -53,11 +55,17 @@
 
         <!--添加或者编辑-->
         <section>
-            <el-dialog custom-class="col1-dialog" :title="formObj.title" width="30%"  :visible.sync="formObj.formVisible" :close-on-click-modal="true">
-                <el-form :model="formObj.formModel" label-width='80px' ref="companyAdd" :rules="companyRules">
-                    <el-input v-model="formObj.formModel.id" v-show="false"></el-input>
-                    <el-form-item label="公司名称" prop="companyName">
-                        <el-input v-model="formObj.formModel.companyName" @blur="checkName(formObj.formModel.companyName, true)" placeholder="请输入公司名称"></el-input>
+            <el-dialog custom-class="col1-dialog" :title="formObj.title" :visible.sync="formObj.formVisible" :close-on-click-modal="true">
+                <el-form :model="formObj.formModel" label-width='80px' ref="companyAdd" :rules="deptRules">
+                    <el-input v-model="formObj.formModel.deptId" v-show="false"></el-input>
+                    <el-form-item label="公司" prop="companyId">
+                        <sd-param-select v-model="formObj.formModel.companyId" type-code="" has-all="company"></sd-param-select>
+                    </el-form-item>
+                    <el-form-item label="上级部门" prop="superDeptId">
+                        <sd-param-select v-model="formObj.formModel.superDeptId" type-code="" has-all="dept"></sd-param-select>
+                    </el-form-item>
+                    <el-form-item label="部门名称" prop="deptName">
+                        <el-input v-model="formObj.formModel.deptName" @blur="checkName(formObj.formModel.deptName, true)" placeholder="请输入部门名称"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -73,13 +81,15 @@
 <script>
     import http from '../../axios/http';
 
+
     export default {
-        name: 'companyManage',
+        name: 'deptManage',
         data() {
             return {
                 heightNum: 0,
                 filters: {
-                    companyName:''
+                    allItem:'',
+                    companyId:''
                 },
                 pagination: {
                     totalElements: 0,
@@ -92,15 +102,20 @@
                 formObj: {
                     title: '',
                     formModel: {
-                        id:'',
-                        companyName:'',
+                        deptId:'',
+                        deptName:'',
+                        companyId:'',
+                        superDeptId:''
                     },
                     formVisible: false,//编辑界面是否显示
                 },
 
-                companyRules:{
-                    companyName: [
-                        { required: true, message: "公司名称不能为空", trigger: 'blur' },
+                deptRules:{
+                    deptName: [
+                        { required: true, message: "部门名称不能为空", trigger: 'blur' },
+                        { max:50, message: "", trigger:'blur'}
+                    ],companyId: [
+                        { required: true, message: "请选择公司", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
                     ]
                 }
@@ -113,6 +128,7 @@
             },
             // 切换每页条数
             handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
                 this.size = val;
                 this.loadPagination();
             },
@@ -128,12 +144,15 @@
                     page: this.pagination.page === 0 ? 1 : this.pagination.page,
                     size: this.size === 0 ? 20 : this.size
                 };
-                if(this.filters.companyName){
-                    params['companyName']=this.filters.companyName;
+                if(this.filters.allItem){
+                    params['allItem']=this.filters.allItem;
+                }
+                if(this.filters.companyId){
+                    params['companyId']=this.filters.companyId;
                 }
                 this.isLoading = true;
-                // console.log(params);
-                http.post("v1.0.0/company/companyPage", params).then(response => {
+                 console.log(params);
+                http.post("v1.0.0/dept/deptPage", params).then(response => {
                     if(response.code==200){
                         this.isLoading = false;
                         this.pagination = response.data;
@@ -147,8 +166,8 @@
                     title: "添加操作",
                     formVisible: true,
                     formModel: {
-                        id:'',
-                        companyName:''
+                        deptId:'',
+                        deptName:''
                     }
                 }
             },
@@ -171,10 +190,10 @@
                 this.$refs[ref].validate((valid) => {
                     if(valid){
                         let method = "post";
-                        let url = "v1.0.0/company/addCompany";
+                        let url = "v1.0.0/dept/addDept";
                         if(this.formObj.formModel.id){
                             method = "put";
-                            url = "v1.0.0/company/modifyCompany";
+                            url = "v1.0.0/dept/modifyDept";
                         }
                         http.postOrPut(url, method, self.formObj.formModel).then(response => {
                             console.log(response);
@@ -202,29 +221,28 @@
                 if (!name) {
                     return false;
                 }
-
                 let params = {
-                    companyName: name
+                    deptName: name
                 };
 
-                http.get("v1.0.0/company/checkName", {params: params}).then(response => {
+                http.get("v1.0.0/dept/checkName", {params: params}).then(response => {
                     if(response == false){
-                        this.formObj.formModel.companyName = '';
-                        this.$message.error('公司名称重复！');
+                        this.formObj.formModel.deptName = '';
+                        this.$message.error('部门名称重复！');
                     }
                 });
             },
 
             //执行删除
             handleDelete(row){
-                if(row.id){
+                if(row.deptId){
                     this.$confirm('确认删除？', '提示', {
                         type: 'warning'
                     }).then(() => {
                         let params ={
-                            id:row.id
+                            id:row.deptId
                         }
-                        http.get("v1.0.0/company/deleteCompany", {params: params}).then(response => {
+                        http.get("v1.0.0/dept/deleteDept", {params: params}).then(response => {
                             if(response.code == 200){
                                 this.$message.success(response.msg);
                                 this.loadPagination();

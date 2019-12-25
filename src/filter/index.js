@@ -7,10 +7,10 @@ export function nullValFilter(value) {
 // 为空
 export function isEmpty(value) {
     if (value === null || value === undefined) {
-        return true;
+        return false;
     }
     if (value.length === 0) {
-        return true;
+        return false;
     }
     return value instanceof String && value.trim().length === 0;
 }

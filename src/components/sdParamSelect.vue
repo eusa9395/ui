@@ -18,7 +18,7 @@
                 required: true,
             },
             hasAll: {
-                type: Boolean,
+                type: String,
                 required: false,
                 default: false
             },
@@ -97,8 +97,17 @@
                 console.debug("input: " + input);
                 console.debug("this.value: " + this.value);
                 console.groupEnd();
-
-                let url = "v1.0.0/paramsDetail/queryDetails?code=" + this.typeCode;
+                console.log(this.hasAll);
+                let url;
+                if (this.hasAll) {
+                    if(this.hasAll=='company'){
+                        url = "v1.0.0/company/queryCompany";
+                    }else if(this.hasAll=='dept'){
+                        url = "v1.0.0/dept/queryDept";
+                    }
+                } else {
+                    url = "v1.0.0/paramsDetail/queryDetails?code=" + this.typeCode;
+                }
                 component.fetchOptions(url, input, this);
             },
             remoteMethod(input) {
