@@ -171,7 +171,11 @@
                     isBarCodeDisabled: true,
                     title: "编辑操作",
                     formVisible: true,
-                    formModel: Object.assign({}, row)
+                    formModel: {
+                        storeId:row.storeId.toString(),
+                        storeName:row.storeName.toString(),
+                        deptId:row.deptId.toString()
+                    }
                 };
             },
 

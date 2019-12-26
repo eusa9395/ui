@@ -23,6 +23,7 @@
         <el-table :data="pagination.content" :height="heightNum" v-loading="isLoading" highlight-current-row border stripe>
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
             <el-table-column show-overflow-tooltip prop="deptName" label="部门名称" min-width="200"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="superDeptId" label="上级部门" min-width="200"></el-table-column>
             <el-table-column show-overflow-tooltip prop="companyName" label="所属公司" min-width="200"></el-table-column>
             <el-table-column label="更新时间" width="200">
                 <template slot-scope="scope">
@@ -181,7 +182,12 @@
                     isBarCodeDisabled: true,
                     title: "编辑操作",
                     formVisible: true,
-                    formModel: Object.assign({}, row)
+                    formModel: {
+                        deptId:row.deptId.toString(),
+                        deptName:row.deptName.toString(),
+                        companyId:row.companyId.toString(),
+                        superDeptId:row.superDeptId.toString()
+                    }
                 };
             },
 
