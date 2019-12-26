@@ -146,6 +146,18 @@
                     "opts": [
                     ],
                     "parentMenuCode": "001006042"
+                },{
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "可登录Ip管理",
+                    "menuCode": "001006042008",
+                    "menuEname": "ipManage",
+                    "menuLevel": 4,
+                    "menuLink": "ipManage",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006042"
                 }
             ]
         }

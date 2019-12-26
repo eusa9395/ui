@@ -5,8 +5,8 @@
             <el-col :span="24" class="toolbar">
                 <el-form :inline="true" :model="filters">
 
-                    <el-form-item label="公司名称">
-                        <el-input v-model="filters.companyName" placeholder="请输入公司名称"></el-input>
+                    <el-form-item label="设备名称">
+                        <el-input v-model="filters.ipName" placeholder="输入设备名称"></el-input>
                     </el-form-item>
                     <el-form-item style="margin-left: 20px;">
                         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
@@ -20,7 +20,8 @@
         <!--列表开始-->
         <el-table :data="pagination.content" :height="heightNum" v-loading="isLoading" highlight-current-row border stripe>
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="companyName" label="公司名称" min-width="200"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="ipName" label="ip名称" min-width="200"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="ipAddress" label="IPd值" min-width="200"></el-table-column>
             <el-table-column label="更新时间" width="200">
                 <template slot-scope="scope">
                     {{ scope.row.updateTime | china2Local}}
@@ -54,15 +55,18 @@
         <!--添加或者编辑-->
         <section>
             <el-dialog custom-class="col1-dialog" :title="formObj.title" width="30%"  :visible.sync="formObj.formVisible" :close-on-click-modal="true">
-                <el-form :model="formObj.formModel" label-width='80px' ref="companyAdd" :rules="companyRules">
+                <el-form :model="formObj.formModel" label-width='80px' ref="ipAdd" :rules="ipRules">
                     <el-input v-model="formObj.formModel.id" v-show="false"></el-input>
-                    <el-form-item label="公司名称" prop="companyName">
-                        <el-input v-model="formObj.formModel.companyName" @blur="checkName(formObj.formModel.companyName, true)" placeholder="请输入公司名称"></el-input>
+                    <el-form-item label="ip名称" prop="ipName">
+                        <el-input v-model="formObj.formModel.ipName" placeholder="请输入ip名称"></el-input>
+                    </el-form-item>
+                    <el-form-item label="ip地址" prop="ipAddress">
+                        <el-input v-model="formObj.formModel.ipAddress" placeholder="请输入ip地址"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="handleClose('companyAdd')">取消</el-button>
-                    <el-button type="primary" @click="handleSubmit('companyAdd')">确认</el-button>
+                    <el-button @click="handleClose('ipAdd')">取消</el-button>
+                    <el-button type="primary" @click="handleSubmit('ipAdd')">确认</el-button>
                 </div>
             </el-dialog>
         </section>
@@ -74,12 +78,12 @@
     import http from '../../axios/http';
 
     export default {
-        name: 'companyManage',
+        name: 'ipManage',
         data() {
             return {
                 heightNum: 0,
                 filters: {
-                    companyName:''
+                    ipName:''
                 },
                 pagination: {
                     totalElements: 0,
@@ -93,14 +97,18 @@
                     title: '',
                     formModel: {
                         id:'',
-                        companyName:'',
+                        ipName:'',
+                        ipAddress:''
                     },
                     formVisible: false,//编辑界面是否显示
                 },
 
-                companyRules:{
-                    companyName: [
-                        { required: true, message: "公司名称不能为空", trigger: 'blur' },
+                ipRules:{
+                    ipName: [
+                        { required: true, message: "ip名称不能为空", trigger: 'blur' },
+                        { max:50, message: "", trigger:'blur'}
+                    ],ipAddress: [
+                        { required: true, message: "ip地址不能为空", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
                     ]
                 }
@@ -128,15 +136,17 @@
                     page: this.pagination.page === 0 ? 1 : this.pagination.page,
                     size: this.size === 0 ? 20 : this.size
                 };
-                if(this.filters.companyName){
-                    params['companyName']=this.filters.companyName;
+                if(this.filters.ipName){
+                    params['ipName']=this.filters.ipName;
                 }
                 this.isLoading = true;
                 // console.log(params);
-                http.post("v1.0.0/company/companyPage", params).then(response => {
+                http.post("v1.0.0/sysUserIp/getSysIpList", params).then(response => {
+
                     if(response.code==200){
                         this.isLoading = false;
                         this.pagination = response.data;
+                        console.log(this.pagination);
                     }
                 });
             },
@@ -169,10 +179,10 @@
                 this.$refs[ref].validate((valid) => {
                     if(valid){
                         let method = "post";
-                        let url = "v1.0.0/company/addCompany";
+                        let url = "v1.0.0/sysUserIp/addIp";
                         if(this.formObj.formModel.id){
                             method = "put";
-                            url = "v1.0.0/company/modifyCompany";
+                            url = "v1.0.0/sysUserIp/modifyIp";
                         }
                         http.postOrPut(url, method, self.formObj.formModel).then(response => {
                             console.log(response);
@@ -196,23 +206,6 @@
                 this.$refs[ref].resetFields();
                 this.formObj.formVisible=false;
             },
-            checkName(name,callback){
-                if (!name) {
-                    return false;
-                }
-
-                let params = {
-                    companyName: name
-                };
-
-                http.get("v1.0.0/company/checkName", {params: params}).then(response => {
-                    if(response == false){
-                        this.formObj.formModel.companyName = '';
-                        this.$message.error('公司名称重复！');
-                    }
-                });
-            },
-
             //执行删除
             handleDelete(row){
                 if(row.id){
@@ -220,9 +213,9 @@
                         type: 'warning'
                     }).then(() => {
                         let params ={
-                            id:row.id
+                            ipId:row.id
                         }
-                        http.get("v1.0.0/company/deleteCompany", {params: params}).then(response => {
+                        http.get("v1.0.0/sysUserIp/deleteIp", {params: params}).then(response => {
                             if(response.code == 200){
                                 this.$message.success(response.msg);
                                 this.loadPagination();

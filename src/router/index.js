@@ -11,6 +11,7 @@ import storeManage from "../page/sysManagement/storeManage.vue";
 import groupManage from "../page/sysManagement/groupManage.vue";
 import peopleManage from "../page/sysManagement/peopleManage.vue";
 import roleManage from "../page/sysManagement/roleManage.vue";
+import ipManage from "../page/sysManagement/ipManage.vue";
 
 
 
@@ -74,6 +75,10 @@ export default new VueRouter({
                     name: '角色管理',
                     path: '/roleManage',
                     component: roleManage
+                },{
+                    name: '可登录Ip管理',
+                    path: '/ipManage',
+                    component: ipManage
                 }
             ]
         }
