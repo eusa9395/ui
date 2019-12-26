@@ -122,6 +122,18 @@
                     "opts": [
                     ],
                     "parentMenuCode": "001006042"
+                },{
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "人员管理",
+                    "menuCode": "001006042006",
+                    "menuEname": "peopleManage",
+                    "menuLevel": 4,
+                    "menuLink": "peopleManage",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006042"
                 }
             ]
         }
