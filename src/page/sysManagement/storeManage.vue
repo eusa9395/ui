@@ -20,6 +20,8 @@
         <el-table :data="pagination.content" :height="heightNum" v-loading="isLoading" highlight-current-row border stripe>
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
             <el-table-column show-overflow-tooltip prop="storeName" label="门店名称" min-width="200"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="deptName" label="所属部门" min-width="200"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="companyName" label="所属公司" min-width="200"></el-table-column>
             <el-table-column label="更新时间" width="200">
                 <template slot-scope="scope">
                     {{ scope.row.updateTime | china2Local}}
@@ -156,8 +158,9 @@
                     title: "添加操作",
                     formVisible: true,
                     formModel: {
+                        storeId:'',
+                        storeName:'',
                         deptId:'',
-                        deptName:''
                     }
                 }
             },

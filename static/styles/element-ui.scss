@@ -1,6 +1,26 @@
  //覆盖一些element-ui样式
 
 
+ // 特殊宽度的 input
+ .short_input60, .short_input60 > input { width: 60px;}
+ .short_input80, .short_input80 > input { width: 80px;}
+ .short_input90, .short_input90 > input { width: 90px;}
+ .short_input100, .short_input100 > input { width: 100px;}
+ .short_input120, .short_input120 > input { width: 120px;}
+ .short_input132, .short_input132 > input { width: 132px;}
+ .short_input140, .short_input140 > input { width: 140px;}
+ .short_input170, .short_input170 > input { width: 170px;}
+ .long_input220, .long_input220 > input { width: 220px;}
+ .long_input270, .long_input270 > input { width: 270px;}
+ .long_input317, .long_input317 > input { width: 317px;} //for collectAdd
+ .long_input300, .long_input300 > input { width: 300px;}
+ .long_input400, .long_input400 > input { width: 400px;}
+ .long_input498, .long_input498 > input { width: 498px;}
+ .long_input538, .long_input538 > input { width: 538px;}
+ .long_input98p, .long_input98p > input { width: 98%;}
+ .long_input100p, .long_input100p > input { width: 100%;}
+
+
  //一般弹窗，设置弹出框最小宽度
  .normal-dialog { width: 50%; min-width: 900px;}
  //比较小的弹窗 1列form弹出框

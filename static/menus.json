@@ -110,6 +110,18 @@
                     "opts": [
                     ],
                     "parentMenuCode": "001006042"
+                },{
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "小组管理",
+                    "menuCode": "001006042005",
+                    "menuEname": "groupManage",
+                    "menuLevel": 4,
+                    "menuLink": "groupManage",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006042"
                 }
             ]
         }
