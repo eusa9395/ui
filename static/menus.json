@@ -134,6 +134,18 @@
                     "opts": [
                     ],
                     "parentMenuCode": "001006042"
+                },{
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "角色管理",
+                    "menuCode": "001006042007",
+                    "menuEname": "roleManage",
+                    "menuLevel": 4,
+                    "menuLink": "roleManage",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006042"
                 }
             ]
         }

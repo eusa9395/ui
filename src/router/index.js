@@ -10,6 +10,7 @@ import deptManage from "../page/sysManagement/deptManage.vue";
 import storeManage from "../page/sysManagement/storeManage.vue";
 import groupManage from "../page/sysManagement/groupManage.vue";
 import peopleManage from "../page/sysManagement/peopleManage.vue";
+import roleManage from "../page/sysManagement/roleManage.vue";
 
 
 
@@ -64,11 +65,15 @@ export default new VueRouter({
                 },{
                     name: '小组管理',
                     path: '/groupManage',
-                    component: peopleManage
+                    component: groupManage
                 },{
                     name: '人员管理',
                     path: '/peopleManage',
                     component: peopleManage
+                },{
+                    name: '角色管理',
+                    path: '/roleManage',
+                    component: roleManage
                 }
             ]
         }

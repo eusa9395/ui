@@ -4,17 +4,8 @@
         <el-row>
             <el-col :span="24" class="toolbar">
                 <el-form :inline="true" :model="filters">
-                    <el-form-item label="模糊搜索">
-                        <el-input class="long_input220" v-model="filters.allItem" placeholder=""></el-input>
-                    </el-form-item>
-                    <el-form-item label="用户名">
-                        <el-input v-model="filters.userName" placeholder="输入人员名称搜索"></el-input>
-                    </el-form-item>
-                    <el-form-item label="角色名">
-                        <el-input v-model="filters.roleName" placeholder="输入角色名称搜索"></el-input>
-                    </el-form-item>
-                    <el-form-item label="小组">
-                        <sd-param-select v-model="filters.groupId" type-code="" query-url="v1.0.0/group/queryGroup" ></sd-param-select>
+                    <el-form-item label="角色名称">
+                        <el-input v-model="filters.roleName" placeholder="输角色名称搜索"></el-input>
                     </el-form-item>
                     <el-form-item label="创建时间">
                         <el-date-picker v-model="filters.createTime" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" range-separator="至"
@@ -22,7 +13,6 @@
                     </el-form-item>
                     <el-form-item style="margin-left: 20px;">
                         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                        <el-button type="plain" @click="handleCancle">清空</el-button>
                         <el-button type="success" icon="el-icon-plus" @click="handleAdd" :disabled="isLoading">添加</el-button>
                     </el-form-item>
                 </el-form>
@@ -33,13 +23,8 @@
         <!--列表开始-->
         <el-table :data="pagination.content" :height="heightNum" v-loading="isLoading" highlight-current-row border stripe>
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="userName" label="用户名" min-width="100"></el-table-column>
             <el-table-column show-overflow-tooltip prop="roleName" label="角色名称" min-width="100"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="groupName" label="所属小组" min-width="200"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="storeName" label="所属门店" min-width="200"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="deptName" label="所属部门" min-width="200"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="companyName" label="所属公司" min-width="200"></el-table-column>
-
+            <el-table-column show-overflow-tooltip prop="superRoleId" label="所属上级" min-width="100"></el-table-column>
             <el-table-column label="更新时间" width="200">
                 <template slot-scope="scope">
                     {{ scope.row.updateTime | china2Local}}
@@ -50,9 +35,10 @@
                     {{ scope.row.createTime | china2Local}}
                 </template>
             </el-table-column>
-            <el-table-column label="" width="200" fixed="right">
+            <el-table-column label="" width="300" fixed="right">
                 <template slot-scope="scope">
                     <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleExit(scope.row)">编辑</el-button>
+                    <el-button type="success" size="mini" @click="handleExit(scope.row)">分配权限</el-button>
                     <el-button type="danger" size="mini" icon="el-icon-delete" plain @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -73,26 +59,18 @@
         <!--添加或者编辑-->
         <section>
             <el-dialog custom-class="col1-dialog" :title="formObj.title" :visible.sync="formObj.formVisible" :close-on-click-modal="true">
-                <el-form :model="formObj.formModel" label-width='80px' ref="peopleAdd" :rules="peopleRules">
+                <el-form :model="formObj.formModel" label-width='80px' ref="roleAdd" :rules="roleRules">
                     <el-input v-model="formObj.formModel.userId" v-show="false"></el-input>
-                    <el-form-item label="用户名称" prop="userName">
-                        <el-input v-model="formObj.formModel.userName" placeholder="请输入用户名称"></el-input>
+                    <el-form-item label="角色名称" prop="roleName">
+                        <el-input v-model="formObj.formModel.roleName" placeholder="请输入角色名称"></el-input>
                     </el-form-item>
-                    <el-form-item label="用户密码" prop="pwd">
-                        <el-input  v-model="formObj.formModel.pwd" :type="passw" placeholder="请输入用户密码">
-                            <i slot="suffix" :class="icon" @click="showPass"></i>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item label="选择角色" prop="roleId">
-                        <sd-param-select v-model="formObj.formModel.roleId" type-code="" query-url="v1.0.0/sysRole/queryRole" ></sd-param-select>
-                    </el-form-item>
-                    <el-form-item label="所属小组" prop="groupId">
-                        <sd-param-select v-model="formObj.formModel.groupId" type-code="" query-url="v1.0.0/group/queryGroup" ></sd-param-select>
+                    <el-form-item label="上级角色" prop="superRoleId">
+                        <sd-param-select v-model="formObj.formModel.superRoleId" type-code="" query-url="v1.0.0/sysRole/queryRole" ></sd-param-select>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="handleClose('peopleAdd')">取消</el-button>
-                    <el-button type="primary" @click="handleSubmit('peopleAdd')">确认</el-button>
+                    <el-button @click="handleClose('roleAdd')">取消</el-button>
+                    <el-button type="primary" @click="handleSubmit('roleAdd')">确认</el-button>
                 </div>
             </el-dialog>
         </section>
@@ -110,11 +88,8 @@
             return {
                 heightNum: 0,
                 filters: {
-                    allItem:'',
-                    userName:'',
                     roleName:'',
                     createTime:'',
-                    groupId:''
                 },
                 pagination: {
                     totalElements: 0,
@@ -127,30 +102,19 @@
                 formObj: {
                     title: '',
                     formModel: {
-                        userId:'',
-                        userName:'',
-                        pwd:'',
                         roleId:'',
-                        groupId:'',
-                        avator:''   //用户头像
+                        roleName:'',
+                        superRoleId:''
                     },
                     formVisible: false,//编辑界面是否显示
                 },
-                passw:"password",
-                icon:"el-input__icon el-icon-view",
 
-                peopleRules:{
-                    userName: [
-                        { required: true, message: "用户名称不能为空", trigger: 'blur' },
+                roleRules:{
+                    roleName: [
+                        { required: true, message: "角色名称不能为空", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
-                    ],pwd: [
-                        { required: true, message: "用户密码不能为空", trigger: 'blur' },
-                        { max:50, message: "", trigger:'blur'}
-                    ],roleId: [
-                        { required: true, message: "请选择角色", trigger: 'blur' },
-                        { max:50, message: "", trigger:'blur'}
-                    ],groupId: [
-                        { required: true, message: "请选择小组", trigger: 'blur' },
+                    ],superRoleId: [
+                        { required: true, message: "请选择上级角色", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
                     ]
                 }
@@ -163,11 +127,8 @@
             },
             handleCancle() {
                 this.filters={
-                    userName:'',
                     roleName:'',
-                    createTime:'',
-                    groupId:'',
-                    allItem:''
+                    createTime:''
                 }
             },
             // 切换每页条数
@@ -188,17 +149,8 @@
                     page: this.pagination.page === 0 ? 1 : this.pagination.page,
                     size: this.size === 0 ? 20 : this.size
                 };
-                if(this.filters.allItem){
-                    params['allItem']=this.filters.allItem;
-                }
-                if(this.filters.userName){
-                    params['userName']=this.filters.userName;
-                }
                 if(this.filters.roleName){
                     params['roleName']=this.filters.roleName;
-                }
-                if(this.filters.groupId){
-                    params['groupId']=this.filters.groupId;
                 }
                 if (this.filters.createTime) {
                     params['startTime'] = this.filters.createTime[0];
@@ -206,7 +158,7 @@
                 }
                 this.isLoading = true;
                  console.log(params);
-                http.post("v1.0.0/sys/getUserList", params).then(response => {
+                http.post("v1.0.0/sysRole/getRoleList", params).then(response => {
                     if(response.code==200){
                         this.isLoading = false;
                         this.pagination = response.data;
@@ -220,11 +172,9 @@
                     title: "添加操作",
                     formVisible: true,
                     formModel: {
-                        userId:'',
-                        userName:'',
-                        pwd:'',
                         roleId:'',
-                        groupId:''
+                        roleName:'',
+                        superRoleId:''
                     }
                 }
             },
@@ -236,11 +186,9 @@
                     title: "编辑操作",
                     formVisible: true,
                     formModel: {
-                        userId:row.userId,
-                        userName:row.userName,
-                        pwd:row.pwd,
-                        roleId:row.roleId.toString(),
-                        groupId:row.groupId.toString()
+                        roleId:row.roleId,
+                        roleName: row.roleName,
+                        superRoleId: row.superRoleId.toString()
                     }
                 };
             },
@@ -251,10 +199,10 @@
                 this.$refs[ref].validate((valid) => {
                     if(valid){
                         let method = "post";
-                        let url = "v1.0.0/sys/addSysUser";
-                        if(this.formObj.formModel.userId){
+                        let url = "v1.0.0/sysRole/addSysRole";
+                        if(this.formObj.formModel.roleId){
                             method = "put";
-                            url = "v1.0.0/sys/upSysUser";
+                            url = "v1.0.0/sysRole/upSysRoleById";
                         }
                         http.postOrPut(url, method, self.formObj.formModel).then(response => {
                             console.log(response);
@@ -282,14 +230,14 @@
             },
             //执行删除
             handleDelete(row){
-                if(row.userId){
+                if(row.roleId){
                     this.$confirm('确认删除？', '提示', {
                         type: 'warning'
                     }).then(() => {
                         let params ={
-                            userId:row.userId
+                            roleId:row.roleId
                         }
-                        http.get("v1.0.0/sys/deleteUserById", {params: params}).then(response => {
+                        http.get("v1.0.0/sysRole/deleteRoleById", {params: params}).then(response => {
                             if(response.code == 200){
                                 this.$message.success(response.msg);
                                 this.loadPagination();
