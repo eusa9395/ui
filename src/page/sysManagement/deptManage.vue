@@ -66,7 +66,7 @@
                         <sd-param-select v-model="formObj.formModel.superDeptId" type-code="" query-url="v1.0.0/dept/queryDept"></sd-param-select>
                     </el-form-item>
                     <el-form-item label="部门名称" prop="deptName">
-                        <el-input v-model="formObj.formModel.deptName" @blur="checkName(formObj.formModel.deptName, true)" placeholder="请输入部门名称"></el-input>
+                        <el-input v-model="formObj.formModel.deptName" placeholder="请输入部门名称"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -192,7 +192,7 @@
                     if(valid){
                         let method = "post";
                         let url = "v1.0.0/dept/addDept";
-                        if(this.formObj.formModel.id){
+                        if(this.formObj.formModel.deptId){
                             method = "put";
                             url = "v1.0.0/dept/modifyDept";
                         }
@@ -203,6 +203,8 @@
                                 self.formObj.formVisible=false;
                                 self.$message.success(response.msg);
                                 self.loadPagination();
+                            }else{
+                                self.$message.error(response.msg);
                             }
                         }).catch(function (error) {
                             self.isLoading = true;
@@ -218,21 +220,6 @@
                 this.$refs[ref].resetFields();
                 this.formObj.formVisible=false;
             },
-            checkName(name,callback){
-                if (!name) {
-                    return false;
-                }
-                let params = {
-                    deptName: name
-                };
-
-                http.get("v1.0.0/dept/checkName", {params: params}).then(response => {
-                    if(response == false){
-                        this.formObj.formModel.deptName = '';
-                        this.$message.error('部门名称重复！');
-                    }
-                });
-            },
 
             //执行删除
             handleDelete(row){
@@ -247,6 +234,8 @@
                             if(response.code == 200){
                                 this.$message.success(response.msg);
                                 this.loadPagination();
+                            }else{
+                                self.$message.error(response.msg);
                             }
                         });
                     })

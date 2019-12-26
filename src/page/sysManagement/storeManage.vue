@@ -61,7 +61,7 @@
                         <sd-param-select v-model="formObj.formModel.deptId" type-code="" query-url="v1.0.0/dept/queryDept" ></sd-param-select>
                     </el-form-item>
                     <el-form-item label="门店名称" prop="storeName">
-                        <el-input v-model="formObj.formModel.storeName" @blur="checkName(formObj.formModel.storeName, true)" placeholder="请输入门店名称"></el-input>
+                        <el-input v-model="formObj.formModel.storeName" placeholder="请输入门店名称"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -193,6 +193,8 @@
                                 self.formObj.formVisible=false;
                                 self.$message.success(response.msg);
                                 self.loadPagination();
+                            }else{
+                                self.$message.error(response.msg);
                             }
                         }).catch(function (error) {
                             self.isLoading = true;
@@ -208,21 +210,6 @@
                 this.$refs[ref].resetFields();
                 this.formObj.formVisible=false;
             },
-            checkName(name,callback){
-                if (!name) {
-                    return false;
-                }
-                let params = {
-                    deptName: name
-                };
-
-                http.get("v1.0.0/store/checkName", {params: params}).then(response => {
-                    if(response == false){
-                        this.formObj.formModel.deptName = '';
-                        this.$message.error('门店名称重复！');
-                    }
-                });
-            },
 
             //执行删除
             handleDelete(row){
@@ -237,6 +224,8 @@
                             if(response.code == 200){
                                 this.$message.success(response.msg);
                                 this.loadPagination();
+                            }else{
+                                self.$message.error(response.msg);
                             }
                         });
                     })
