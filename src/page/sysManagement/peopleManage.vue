@@ -79,7 +79,9 @@
                         <el-input v-model="formObj.formModel.userName" placeholder="请输入用户名称"></el-input>
                     </el-form-item>
                     <el-form-item label="用户密码" prop="pwd">
-                        <el-input v-model="formObj.formModel.pwd" placeholder="请输入用户密码"></el-input>
+                        <el-input  v-model="formObj.formModel.pwd" :type="passw" placeholder="请输入用户密码">
+                            <i slot="suffix" :class="icon" @click="showPass"></i>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="选择角色" prop="roleId">
                         <sd-param-select v-model="formObj.formModel.roleId" type-code="" query-url="v1.0.0/sysRole/queryRole" ></sd-param-select>
@@ -134,6 +136,8 @@
                     },
                     formVisible: false,//编辑界面是否显示
                 },
+                passw:"password",
+                icon:"el-input__icon el-icon-view",
 
                 peopleRules:{
                     userName: [
@@ -296,7 +300,17 @@
                     })
                 }
             },
-
+            showPass(){
+                //点击图标是密码隐藏或显示
+                if( this.passw=="text"){
+                    this.passw="password";
+                    //更换图标
+                    this.icon="el-input__icon el-icon-view";
+                }else {
+                    this.passw="text";
+                    this.icon="el-input__icon el-icon-loading";
+                };
+            },
             // 计算表格高度
             initData(){
                 let self = this;
