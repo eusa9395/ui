@@ -5,7 +5,7 @@
             <el-col :span="24" class="toolbar">
                 <el-form :inline="true" :model="filters">
                     <el-form-item label="模糊搜索">
-                        <el-input v-model="filters.allItem" placeholder=""></el-input>
+                        <el-input class="long_input220" v-model="filters.allItem" placeholder=""></el-input>
                     </el-form-item>
                     <el-form-item label="用户名">
                         <el-input v-model="filters.userName" placeholder="输入人员名称搜索"></el-input>
@@ -35,7 +35,7 @@
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
             <el-table-column show-overflow-tooltip prop="userName" label="用户名" min-width="100"></el-table-column>
             <el-table-column show-overflow-tooltip prop="roleName" label="角色名称" min-width="100"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="groupName" label="角色名称" min-width="200"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="groupName" label="所属小组" min-width="200"></el-table-column>
             <el-table-column show-overflow-tooltip prop="storeName" label="所属门店" min-width="200"></el-table-column>
             <el-table-column show-overflow-tooltip prop="deptName" label="所属部门" min-width="200"></el-table-column>
             <el-table-column show-overflow-tooltip prop="companyName" label="所属公司" min-width="200"></el-table-column>
@@ -73,18 +73,24 @@
         <!--添加或者编辑-->
         <section>
             <el-dialog custom-class="col1-dialog" :title="formObj.title" :visible.sync="formObj.formVisible" :close-on-click-modal="true">
-                <el-form :model="formObj.formModel" label-width='80px' ref="groupAdd" :rules="groupRules">
-                    <el-input v-model="formObj.formModel.groupId" v-show="false"></el-input>
-                    <el-form-item label="门店" prop="storeId">
-                        <sd-param-select v-model="formObj.formModel.storeId" type-code="" query-url="v1.0.0/store/queryStore" ></sd-param-select>
+                <el-form :model="formObj.formModel" label-width='80px' ref="peopleAdd" :rules="peopleRules">
+                    <el-input v-model="formObj.formModel.userId" v-show="false"></el-input>
+                    <el-form-item label="用户名称" prop="userName">
+                        <el-input v-model="formObj.formModel.userName" placeholder="请输入用户名称"></el-input>
                     </el-form-item>
-                    <el-form-item label="小组名称" prop="groupName">
-                        <el-input v-model="formObj.formModel.groupName" placeholder="请输入小组名称"></el-input>
+                    <el-form-item label="用户密码" prop="pwd">
+                        <el-input v-model="formObj.formModel.pwd" placeholder="请输入用户密码"></el-input>
+                    </el-form-item>
+                    <el-form-item label="选择角色" prop="roleId">
+                        <sd-param-select v-model="formObj.formModel.roleId" type-code="" query-url="v1.0.0/sysRole/queryRole" ></sd-param-select>
+                    </el-form-item>
+                    <el-form-item label="所属小组" prop="groupId">
+                        <sd-param-select v-model="formObj.formModel.groupId" type-code="" query-url="v1.0.0/group/queryGroup" ></sd-param-select>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="handleClose('groupAdd')">取消</el-button>
-                    <el-button type="primary" @click="handleSubmit('groupAdd')">确认</el-button>
+                    <el-button @click="handleClose('peopleAdd')">取消</el-button>
+                    <el-button type="primary" @click="handleSubmit('peopleAdd')">确认</el-button>
                 </div>
             </el-dialog>
         </section>
@@ -119,18 +125,28 @@
                 formObj: {
                     title: '',
                     formModel: {
-                        storeId:'',
-                        groupName:''
+                        userId:'',
+                        userName:'',
+                        pwd:'',
+                        roleId:'',
+                        groupId:'',
+                        avator:''   //用户头像
                     },
                     formVisible: false,//编辑界面是否显示
                 },
 
-                groupRules:{
-                    groupName: [
-                        { required: true, message: "小组名称不能为空", trigger: 'blur' },
+                peopleRules:{
+                    userName: [
+                        { required: true, message: "用户名称不能为空", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
-                    ],storeId: [
-                        { required: true, message: "请选择门店", trigger: 'blur' },
+                    ],pwd: [
+                        { required: true, message: "用户密码不能为空", trigger: 'blur' },
+                        { max:50, message: "", trigger:'blur'}
+                    ],roleId: [
+                        { required: true, message: "请选择角色", trigger: 'blur' },
+                        { max:50, message: "", trigger:'blur'}
+                    ],groupId: [
+                        { required: true, message: "请选择小组", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
                     ]
                 }
@@ -146,7 +162,8 @@
                     userName:'',
                     roleName:'',
                     createTime:'',
-                    groupId:''
+                    groupId:'',
+                    allItem:''
                 }
             },
             // 切换每页条数
@@ -170,6 +187,19 @@
                 if(this.filters.allItem){
                     params['allItem']=this.filters.allItem;
                 }
+                if(this.filters.userName){
+                    params['userName']=this.filters.userName;
+                }
+                if(this.filters.roleName){
+                    params['roleName']=this.filters.roleName;
+                }
+                if(this.filters.groupId){
+                    params['groupId']=this.filters.groupId;
+                }
+                if (this.filters.createTime) {
+                    params['startTime'] = this.filters.createTime[0];
+                    params['endTime'] = this.filters.createTime[1];
+                }
                 this.isLoading = true;
                  console.log(params);
                 http.post("v1.0.0/sys/getUserList", params).then(response => {
@@ -186,8 +216,11 @@
                     title: "添加操作",
                     formVisible: true,
                     formModel: {
-                        storeId:'',
-                        groupName:''
+                        userId:'',
+                        userName:'',
+                        pwd:'',
+                        roleId:'',
+                        groupId:''
                     }
                 }
             },
@@ -199,9 +232,11 @@
                     title: "编辑操作",
                     formVisible: true,
                     formModel: {
-                        groupId:row.groupId.toString(),
-                        storeId:row.storeId.toString(),
-                        groupName:row.groupName.toString()
+                        userId:row.userId,
+                        userName:row.userName,
+                        pwd:row.pwd,
+                        roleId:row.roleId.toString(),
+                        groupId:row.groupId.toString()
                     }
                 };
             },
@@ -212,10 +247,10 @@
                 this.$refs[ref].validate((valid) => {
                     if(valid){
                         let method = "post";
-                        let url = "v1.0.0/group/addGroup";
-                        if(this.formObj.formModel.groupId){
+                        let url = "v1.0.0/sys/addSysUser";
+                        if(this.formObj.formModel.userId){
                             method = "put";
-                            url = "v1.0.0/group/modefyGroup";
+                            url = "v1.0.0/sys/upSysUser";
                         }
                         http.postOrPut(url, method, self.formObj.formModel).then(response => {
                             console.log(response);
@@ -243,14 +278,14 @@
             },
             //执行删除
             handleDelete(row){
-                if(row.groupId){
+                if(row.userId){
                     this.$confirm('确认删除？', '提示', {
                         type: 'warning'
                     }).then(() => {
                         let params ={
-                            groupId:row.groupId
+                            userId:row.userId
                         }
-                        http.get("v1.0.0/group/deleteGroup", {params: params}).then(response => {
+                        http.get("v1.0.0/sys/deleteUserById", {params: params}).then(response => {
                             if(response.code == 200){
                                 this.$message.success(response.msg);
                                 this.loadPagination();
