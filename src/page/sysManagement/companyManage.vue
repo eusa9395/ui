@@ -161,8 +161,6 @@
                     formVisible: true,
                     formModel: Object.assign({}, row)
                 };
-                this.formObj.formModel.type += "";
-                this.formObj.formModel.status += "";
             },
 
             //执行添加 / 修改

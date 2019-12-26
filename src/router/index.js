@@ -7,6 +7,7 @@ import created_order from "../page/created_order.vue";
 import paramSetting from "../page/sysManagement/paramSetting.vue";
 import companyManage from "../page/sysManagement/companyManage.vue";
 import deptManage from "../page/sysManagement/deptManage.vue";
+import storeManage from "../page/sysManagement/storeManage.vue";
 
 
 
@@ -54,6 +55,10 @@ export default new VueRouter({
                     name: '部门管理',
                     path: '/deptManage',
                     component: deptManage
+                },{
+                    name: '门店管理',
+                    path: '/storeManage',
+                    component: storeManage
                 }
             ]
         }

@@ -5,11 +5,8 @@
             <el-col :span="24" class="toolbar">
                 <el-form :inline="true" :model="filters">
                     <el-form-item label="模糊搜索">
-                        <el-input v-model="filters.allItem" placeholder="输入部门，公司名称搜索"></el-input>
+                        <el-input v-model="filters.allItem" placeholder="输入门店，部门，公司名称搜索"></el-input>
                     </el-form-item>
-                    <!--<el-form-item label="公司名称">
-                        <sd-param-select v-model="filters.companyId" type-code="" has-all="company"></sd-param-select>
-                    </el-form-item>&ndash;&gt;-->
                     <el-form-item style="margin-left: 20px;">
                         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                         <el-button type="success" icon="el-icon-plus" @click="handleAdd" :disabled="isLoading">添加</el-button>
@@ -22,7 +19,7 @@
         <!--列表开始-->
         <el-table :data="pagination.content" :height="heightNum" v-loading="isLoading" highlight-current-row border stripe>
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="deptName" label="部门名称" min-width="200"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="storeName" label="门店名称" min-width="200"></el-table-column>
             <el-table-column label="更新时间" width="200">
                 <template slot-scope="scope">
                     {{ scope.row.updateTime | china2Local}}
@@ -56,21 +53,18 @@
         <!--添加或者编辑-->
         <section>
             <el-dialog custom-class="col1-dialog" :title="formObj.title" :visible.sync="formObj.formVisible" :close-on-click-modal="true">
-                <el-form :model="formObj.formModel" label-width='80px' ref="deptAdd" :rules="deptRules">
-                    <el-input v-model="formObj.formModel.deptId" v-show="false"></el-input>
-                    <el-form-item label="公司" prop="companyId">
-                        <sd-param-select v-model="formObj.formModel.companyId" type-code="" query-url="v1.0.0/company/queryCompany"></sd-param-select>
+                <el-form :model="formObj.formModel" label-width='80px' ref="storeAdd" :rules="storeRules">
+                    <el-input v-model="formObj.formModel.storeId" v-show="false"></el-input>
+                    <el-form-item label="部门" prop="deptId">
+                        <sd-param-select v-model="formObj.formModel.deptId" type-code="" query-url="v1.0.0/dept/queryDept" ></sd-param-select>
                     </el-form-item>
-                    <el-form-item label="上级部门" prop="superDeptId">
-                        <sd-param-select v-model="formObj.formModel.superDeptId" type-code="" query-url="v1.0.0/dept/queryDept"></sd-param-select>
-                    </el-form-item>
-                    <el-form-item label="部门名称" prop="deptName">
-                        <el-input v-model="formObj.formModel.deptName" @blur="checkName(formObj.formModel.deptName, true)" placeholder="请输入部门名称"></el-input>
+                    <el-form-item label="门店名称" prop="storeName">
+                        <el-input v-model="formObj.formModel.storeName" @blur="checkName(formObj.formModel.storeName, true)" placeholder="请输入门店名称"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="handleClose('deptAdd')">取消</el-button>
-                    <el-button type="primary" @click="handleSubmit('deptAdd')">确认</el-button>
+                    <el-button @click="handleClose('storeAdd')">取消</el-button>
+                    <el-button type="primary" @click="handleSubmit('storeAdd')">确认</el-button>
                 </div>
             </el-dialog>
         </section>
@@ -83,7 +77,7 @@
 
 
     export default {
-        name: 'deptManage',
+        name: 'storeManage',
         data() {
             return {
                 heightNum: 0,
@@ -102,20 +96,19 @@
                 formObj: {
                     title: '',
                     formModel: {
+                        storeId:'',
+                        storeName:'',
                         deptId:'',
-                        deptName:'',
-                        companyId:'',
-                        superDeptId:''
                     },
                     formVisible: false,//编辑界面是否显示
                 },
 
-                deptRules:{
-                    deptName: [
-                        { required: true, message: "部门名称不能为空", trigger: 'blur' },
+                storeRules:{
+                    storeName: [
+                        { required: true, message: "门店名称不能为空", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
-                    ],companyId: [
-                        { required: true, message: "请选择公司", trigger: 'blur' },
+                    ],deptId: [
+                        { required: true, message: "请选择部门", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
                     ]
                 }
@@ -147,12 +140,9 @@
                 if(this.filters.allItem){
                     params['allItem']=this.filters.allItem;
                 }
-                if(this.filters.companyId){
-                    params['companyId']=this.filters.companyId;
-                }
                 this.isLoading = true;
                  console.log(params);
-                http.post("v1.0.0/dept/deptPage", params).then(response => {
+                http.post("v1.0.0/store/storePage", params).then(response => {
                     if(response.code==200){
                         this.isLoading = false;
                         this.pagination = response.data;
@@ -188,10 +178,10 @@
                 this.$refs[ref].validate((valid) => {
                     if(valid){
                         let method = "post";
-                        let url = "v1.0.0/dept/addDept";
-                        if(this.formObj.formModel.id){
+                        let url = "v1.0.0/store/addStore";
+                        if(this.formObj.formModel.storeId){
                             method = "put";
-                            url = "v1.0.0/dept/modifyDept";
+                            url = "v1.0.0/store/modefyStore";
                         }
                         http.postOrPut(url, method, self.formObj.formModel).then(response => {
                             console.log(response);
@@ -223,24 +213,24 @@
                     deptName: name
                 };
 
-                http.get("v1.0.0/dept/checkName", {params: params}).then(response => {
+                http.get("v1.0.0/store/checkName", {params: params}).then(response => {
                     if(response == false){
                         this.formObj.formModel.deptName = '';
-                        this.$message.error('部门名称重复！');
+                        this.$message.error('门店名称重复！');
                     }
                 });
             },
 
             //执行删除
             handleDelete(row){
-                if(row.deptId){
+                if(row.storeId){
                     this.$confirm('确认删除？', '提示', {
                         type: 'warning'
                     }).then(() => {
                         let params ={
-                            id:row.deptId
+                            storeId:row.storeId
                         }
-                        http.get("v1.0.0/dept/deleteDept", {params: params}).then(response => {
+                        http.get("v1.0.0/store/deleteStore", {params: params}).then(response => {
                             if(response.code == 200){
                                 this.$message.success(response.msg);
                                 this.loadPagination();

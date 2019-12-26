@@ -98,6 +98,18 @@
                     "opts": [
                     ],
                     "parentMenuCode": "001006042"
+                },{
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "门店管理",
+                    "menuCode": "001006042004",
+                    "menuEname": "storeManage",
+                    "menuLevel": 4,
+                    "menuLink": "storeManage",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006042"
                 }
             ]
         }

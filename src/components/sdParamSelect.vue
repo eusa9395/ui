@@ -1,5 +1,5 @@
 <template>
-    <el-select v-model="currentValue" :type="typeCode" :has-all="hasAll" :placeholder="placeholderText" :key-name="keyName" :label-name="labelName" :disable-name="disableName" :with-disabled="withDisabled" :disabled="disabled" :clearable="clearable" :multiple="multiple" :filterable="filterable" :filter-size="filterSize" :remote="remotable" :remote-method="remoteMethod">
+    <el-select v-model="currentValue" :type="typeCode" :has-all="hasAll" :query-url="queryUrl" :placeholder="placeholderText" :key-name="keyName" :label-name="labelName" :disable-name="disableName" :with-disabled="withDisabled" :disabled="disabled" :clearable="clearable" :multiple="multiple" :filterable="filterable" :filter-size="filterSize" :remote="remotable" :remote-method="remoteMethod">
         <el-option v-if="hasAll" value="" label="全部"></el-option>
         <el-option v-for="option in options" :loading="isLoading" :key="option[keyName]" :label="option[labelName]" :value="option[keyName]" :disabled="option[disableName]"></el-option>
     </el-select>
@@ -18,6 +18,11 @@
                 required: true,
             },
             hasAll: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            queryUrl: {
                 type: String,
                 required: false,
                 default: false
@@ -97,14 +102,10 @@
                 console.debug("input: " + input);
                 console.debug("this.value: " + this.value);
                 console.groupEnd();
-                console.log(this.hasAll);
+                console.log(this.queryUrl);
                 let url;
-                if (this.hasAll) {
-                    if(this.hasAll=='company'){
-                        url = "v1.0.0/company/queryCompany";
-                    }else if(this.hasAll=='dept'){
-                        url = "v1.0.0/dept/queryDept";
-                    }
+                if (this.queryUrl) {
+                    url = this.queryUrl;
                 } else {
                     url = "v1.0.0/paramsDetail/queryDetails?code=" + this.typeCode;
                 }
