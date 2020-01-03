@@ -24,7 +24,11 @@
         <el-table :data="pagination.content" :height="heightNum" v-loading="isLoading" highlight-current-row border stripe>
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
             <el-table-column show-overflow-tooltip prop="roleName" label="角色名称" min-width="100"></el-table-column>
-            <el-table-column show-overflow-tooltip prop="superRoleId" label="所属上级" min-width="100"></el-table-column>
+            <el-table-column show-overflow-tooltip label="所属上级" min-width="100">
+                <template slot-scope="scope">
+                       {{scope.row.superRoleId | roleCode2RoleCname(scope.row.superRoleId)}}
+                </template>
+            </el-table-column>
             <el-table-column label="更新时间" width="200">
                 <template slot-scope="scope">
                     {{ scope.row.updateTime | china2Local}}

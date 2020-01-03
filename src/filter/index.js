@@ -1,4 +1,5 @@
 import moment from "moment";
+import http from "../axios/http";
 
 // 空值过滤器
 export function nullValFilter(value) {
@@ -89,6 +90,19 @@ export function paramCode2ParamCname(value, paramCode) {
         }
         if(!isMatch){
             return value
+        }
+    }
+    return null;
+}
+
+
+export function roleCode2RoleCname(value,roleId) {
+    if (roleId) {
+        let url = "v1.0.0/sysRole/queryRoleById?roleId=" + roleId;
+        let response = http.sync_get(url);
+        let text = JSON.parse(response);
+        if(response){
+            return text['role_name'];
         }
     }
     return null;
