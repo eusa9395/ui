@@ -13,6 +13,7 @@ import peopleManage from "../page/sysManagement/peopleManage.vue";
 import roleManage from "../page/sysManagement/roleManage.vue";
 import ipManage from "../page/sysManagement/ipManage.vue";
 import regionSetting from "../page/dicManagement/regionManage.vue";
+import streetSetting from "../page/dicManagement/streetManage.vue";
 
 
 
@@ -91,6 +92,10 @@ export default new VueRouter({
                     name: '区域管理',
                     path: '/regionSetting',
                     component: regionSetting
+                },{
+                    name: '街道管理',
+                    path: '/streetSetting',
+                    component: streetSetting
                 }
             ]
         }

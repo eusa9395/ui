@@ -5,8 +5,8 @@
             <el-col :span="24" class="toolbar">
                 <el-form :inline="true" :model="filters">
 
-                    <el-form-item label="区域名称">
-                        <el-input v-model="filters.regionName" placeholder="请输入区域名称"></el-input>
+                    <el-form-item label="街道名称">
+                        <el-input v-model="filters.streetName" placeholder="请输入街道名称"></el-input>
                     </el-form-item>
                     <el-form-item style="margin-left: 20px;">
                         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
@@ -20,6 +20,7 @@
         <!--列表开始-->
         <el-table :data="pagination.content" :height="heightNum" v-loading="isLoading" highlight-current-row border stripe>
             <el-table-column type="index" label="NO" width="80" align="center"></el-table-column>
+            <el-table-column show-overflow-tooltip prop="streetName" label="街道名称" min-width="200"></el-table-column>
             <el-table-column show-overflow-tooltip prop="regionName" label="区域名称" min-width="200"></el-table-column>
             <el-table-column label="更新时间" min-width="200">
                 <template slot-scope="scope">
@@ -54,15 +55,18 @@
         <!--添加或者编辑-->
         <section>
             <el-dialog custom-class="col1-dialog" :title="formObj.title" width="30%"  :visible.sync="formObj.formVisible" :close-on-click-modal="true">
-                <el-form :model="formObj.formModel" label-width='80px' ref="regionAdd" :rules="regionRules">
-                    <el-input v-model="formObj.formModel.regionId" v-show="false"></el-input>
-                    <el-form-item label="区域名称" prop="regionName">
-                        <el-input v-model="formObj.formModel.regionName" @blur="checkName(formObj.formModel.regionName, true)" placeholder="请输入区域名称"></el-input>
+                <el-form :model="formObj.formModel" label-width='80px' ref="streetAdd" :rules="streetRules">
+                    <el-input v-model="formObj.formModel.streetId" v-show="false"></el-input>
+                    <el-form-item label="区域" prop="regionId">
+                        <sd-param-select v-model="formObj.formModel.regionId" type-code="" query-url="v1.0.0/region/queryRegion"></sd-param-select>
+                    </el-form-item>
+                    <el-form-item label="街道名称" prop="streetName">
+                        <el-input v-model="formObj.formModel.streetName" placeholder="请输入街道名称"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="handleClose('regionAdd')">取消</el-button>
-                    <el-button type="primary" @click="handleSubmit('regionAdd')">确认</el-button>
+                    <el-button @click="handleClose('streetAdd')">取消</el-button>
+                    <el-button type="primary" @click="handleSubmit('streetAdd')">确认</el-button>
                 </div>
             </el-dialog>
         </section>
@@ -79,7 +83,7 @@
             return {
                 heightNum: 0,
                 filters: {
-                    regionName:''
+                    streetName:''
                 },
                 pagination: {
                     totalElements: 0,
@@ -92,15 +96,20 @@
                 formObj: {
                     title: '',
                     formModel: {
+                        streetId:'',
                         regionId:'',
-                        regionName:'',
+                        streetName:'',
                     },
                     formVisible: false,//编辑界面是否显示
                 },
 
-                regionRules:{
-                    regionName: [
-                        { required: true, message: "区域名称不能为空", trigger: 'blur' },
+                streetRules:{
+                    streetName: [
+                        { required: true, message: "街道名称不能为空", trigger: 'blur' },
+                        { max:50, message: "", trigger:'blur'}
+                    ],
+                    regionId: [
+                        { required: true, message: "请选择区域", trigger: 'blur' },
                         { max:50, message: "", trigger:'blur'}
                     ]
                 }
@@ -128,12 +137,12 @@
                     page: this.pagination.page === 0 ? 1 : this.pagination.page,
                     size: this.size === 0 ? 20 : this.size
                 };
-                if(this.filters.regionName){
-                    params['regionName']=this.filters.regionName;
+                if(this.filters.streetName){
+                    params['streetName']=this.filters.streetName;
                 }
                 this.isLoading = true;
                 // console.log(params);
-                http.post("v1.0.0/region/regionPage", params).then(response => {
+                http.post("v1.0.0/street/streetPage", params).then(response => {
                     if(response.code==200){
                         this.isLoading = false;
                         this.pagination = response.data;
@@ -147,8 +156,8 @@
                     title: "添加操作",
                     formVisible: true,
                     formModel: {
-                        regionId:'',
-                        regionName:''
+                        streetId:'',
+                        streetName:''
                     }
                 }
             },
@@ -159,7 +168,11 @@
                     isBarCodeDisabled: true,
                     title: "编辑操作",
                     formVisible: true,
-                    formModel: Object.assign({}, row)
+                    formModel:{
+                        regionId:row.regionId.toString(),
+                        streetId:row.streetId,
+                        streetName:row.streetName
+                    }
                 };
             },
 
@@ -169,10 +182,10 @@
                 this.$refs[ref].validate((valid) => {
                     if(valid){
                         let method = "post";
-                        let url = "v1.0.0/region/addRegion";
-                        if(this.formObj.formModel.regionId){
+                        let url = "v1.0.0/street/addStreet";
+                        if(this.formObj.formModel.streetId){
                             method = "put";
-                            url = "v1.0.0/region/modifyRegion";
+                            url = "v1.0.0/street/modifyStreet";
                         }
                         http.postOrPut(url, method, self.formObj.formModel).then(response => {
                             console.log(response);
@@ -196,33 +209,16 @@
                 this.$refs[ref].resetFields();
                 this.formObj.formVisible=false;
             },
-            checkName(name,callback){
-                if (!name) {
-                    return false;
-                }
-
-                let params = {
-                    regionName: name
-                };
-
-                http.get("v1.0.0/region/checkName", {params: params}).then(response => {
-                    if(response == false){
-                        this.formObj.formModel.regionName = '';
-                        this.$message.error('区域名称已存在！');
-                    }
-                });
-            },
-
             //执行删除
             handleDelete(row){
-                if(row.regionId){
+                if(row.streetId){
                     this.$confirm('确认删除？', '提示', {
                         type: 'warning'
                     }).then(() => {
                         let params ={
-                            regionId:row.regionId
+                            streetId:row.streetId
                         }
-                        http.get("v1.0.0/region/deleteRegion", {params: params}).then(response => {
+                        http.get("v1.0.0/street/deleteStreet", {params: params}).then(response => {
                             if(response.code == 200){
                                 this.$message.success(response.msg);
                                 this.loadPagination();
