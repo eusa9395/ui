@@ -12,6 +12,7 @@ import groupManage from "../page/sysManagement/groupManage.vue";
 import peopleManage from "../page/sysManagement/peopleManage.vue";
 import roleManage from "../page/sysManagement/roleManage.vue";
 import ipManage from "../page/sysManagement/ipManage.vue";
+import regionSetting from "../page/dicManagement/regionManage.vue";
 
 
 
@@ -79,6 +80,17 @@ export default new VueRouter({
                     name: '可登录Ip管理',
                     path: '/ipManage',
                     component: ipManage
+                }
+            ]
+        },{
+            name: '字典管理',
+            path: '/regionSetting',
+            component: Layout,
+            children:[
+               {
+                    name: '区域管理',
+                    path: '/regionSetting',
+                    component: regionSetting
                 }
             ]
         }

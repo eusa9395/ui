@@ -160,6 +160,29 @@
                     "parentMenuCode": "001006042"
                 }
             ]
+        },{
+            "leafFlag": 0,
+            "menuCname": "字典管理",
+            "menuCode": "001006043",
+            "menuEname": "man",
+            "menuLevel": 3,
+            "menuLink": "001006043",
+            "parentMenuCode": "001006",
+            "children": [
+                {
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "区域管理",
+                    "menuCode": "001006043001",
+                    "menuEname": "regionSetting",
+                    "menuLevel": 4,
+                    "menuLink": "regionSetting",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006043"
+                }
+            ]
         }
     ],
     "code": 200,
