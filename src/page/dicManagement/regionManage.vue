@@ -181,6 +181,8 @@
                                 self.formObj.formVisible=false;
                                 self.$message.success(response.msg);
                                 self.loadPagination();
+                            }else{
+                                self.$message.error(response.msg);
                             }
                         }).catch(function (error) {
                             self.isLoading = true;
