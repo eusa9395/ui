@@ -193,6 +193,18 @@
                     "opts": [
                     ],
                     "parentMenuCode": "001006043"
+                },{
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "小区管理",
+                    "menuCode": "001006043003",
+                    "menuEname": "communitySetting",
+                    "menuLevel": 4,
+                    "menuLink": "communitySetting",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006043"
                 }
             ]
         }
