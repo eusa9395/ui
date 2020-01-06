@@ -15,6 +15,7 @@ import ipManage from "../page/sysManagement/ipManage.vue";
 import regionSetting from "../page/dicManagement/regionManage.vue";
 import streetSetting from "../page/dicManagement/streetManage.vue";
 import communitySetting from "../page/dicManagement/communityManage.vue";
+import expenditure from "../page/businessManagement/expenditure.vue";
 
 
 
@@ -101,6 +102,17 @@ export default new VueRouter({
                     name: '小区管理',
                     path: '/communitySetting',
                     component: communitySetting
+                }
+            ]
+        },{
+            name: '业务管理',
+            path: '/expenditure',
+            component: Layout,
+            children:[
+                {
+                    name: '支出列表',
+                    path: '/expenditure',
+                    component: expenditure
                 }
             ]
         }

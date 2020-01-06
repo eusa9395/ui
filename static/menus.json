@@ -207,6 +207,29 @@
                     "parentMenuCode": "001006043"
                 }
             ]
+        },{
+            "leafFlag": 0,
+            "menuCname": "业务管理",
+            "menuCode": "001006044",
+            "menuEname": "business",
+            "menuLevel": 3,
+            "menuLink": "001006044",
+            "parentMenuCode": "001006",
+            "children": [
+                {
+                    "children": [
+                    ],
+                    "leafFlag": 1,
+                    "menuCname": "支出列表",
+                    "menuCode": "001006044001",
+                    "menuEname": "expenditure",
+                    "menuLevel": 4,
+                    "menuLink": "expenditure",
+                    "opts": [
+                    ],
+                    "parentMenuCode": "001006044"
+                }
+            ]
         }
     ],
     "code": 200,

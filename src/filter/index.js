@@ -83,7 +83,7 @@ export function paramCode2ParamCname(value, paramCode) {
     if(list != null && list.constructor === Array) {
         for (let i = 0; i < list.length; i++) {
             // window.sessionStorage.setItem(value, list[i]['cname']);
-            if (value == list[i]['code']) {
+            if (value == list[i]['paramDetailCode']) {
                 isMatch = true;
                 return list[i]['paramDetailName'];
             }

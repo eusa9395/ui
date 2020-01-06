@@ -94,7 +94,7 @@
     import http from '../../axios/http';
 
     export default {
-        name: 'regionManage',
+        name: 'communityManage',
         data() {
             return {
                 heightNum: 0,
