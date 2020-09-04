@@ -53,7 +53,7 @@
         "vue": "^2.5.16",
         "vue-axios": "^2.1.1",
         "vue-core-image-upload": "^2.4.6",
-        "vue-moment": "^4.0.0-0",
+        "vue-moment": "^4.1.0",
         "vue-router": "^3.0.1",
         "vue-loader": "^14.2.2",
         "vue-style-loader": "^4.1.0",
